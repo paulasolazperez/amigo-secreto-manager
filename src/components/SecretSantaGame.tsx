@@ -351,18 +351,21 @@ const SecretSantaGame = () => {
             )}
 
             {/* Draw Button */}
-            {participants.length >= 2 && (
-              <div className="flex justify-center mb-6 sm:mb-8 px-2">
-                <Button
-                  onClick={performDraw}
-                  disabled={isShuffling}
-                  className="bg-gradient-to-r from-primary via-christmas-red to-primary hover:opacity-90 text-primary-foreground gap-2 sm:gap-3 text-base sm:text-lg px-6 sm:px-10 py-6 sm:py-7 glow-primary transition-all duration-300 rounded-xl border-2 border-secondary/30 w-full sm:w-auto"
-                >
-                  <Shuffle className={`w-5 h-5 sm:w-6 sm:h-6 ${isShuffling ? "animate-spin" : ""}`} />
-                  {isShuffling ? "Sorteando..." : "🎅 ¡Realizar Sorteo!"}
-                </Button>
-              </div>
-            )}
+            <div className="flex flex-col items-center gap-2 mb-6 sm:mb-8 px-2">
+              <Button
+                onClick={performDraw}
+                disabled={isShuffling || participants.length < 3}
+                className="bg-gradient-to-r from-primary via-christmas-red to-primary hover:opacity-90 text-primary-foreground gap-2 sm:gap-3 text-base sm:text-lg px-6 sm:px-10 py-6 sm:py-7 glow-primary transition-all duration-300 rounded-xl border-2 border-secondary/30 w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed disabled:glow-none"
+              >
+                <Shuffle className={`w-5 h-5 sm:w-6 sm:h-6 ${isShuffling ? "animate-spin" : ""}`} />
+                {isShuffling ? "Sorteando..." : "🎅 ¡Realizar Sorteo!"}
+              </Button>
+              {participants.length < 3 && (
+                <p className="text-muted-foreground text-sm">
+                  Necesitas al menos 3 participantes ({participants.length}/3)
+                </p>
+              )}
+            </div>
 
             {/* Empty State */}
             {participants.length === 0 && (
