@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Gift, Users, Shuffle, Trash2, Plus, Sparkles, ArrowLeft, Eye, EyeOff, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Gift, Users, Shuffle, Trash2, Plus, Sparkles, ArrowLeft, Eye, EyeOff, Check, TreePine, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -11,6 +11,38 @@ interface Assignment {
 }
 
 type GamePhase = "setup" | "reveal";
+
+const Snowflakes = () => {
+  const [snowflakes, setSnowflakes] = useState<Array<{ id: number; left: number; delay: number; duration: number }>>([]);
+
+  useEffect(() => {
+    const flakes = Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 5 + Math.random() * 10,
+    }));
+    setSnowflakes(flakes);
+  }, []);
+
+  return (
+    <>
+      {snowflakes.map((flake) => (
+        <div
+          key={flake.id}
+          className="snowflake"
+          style={{
+            left: `${flake.left}%`,
+            animationDelay: `${flake.delay}s`,
+            animationDuration: `${flake.duration}s`,
+          }}
+        >
+          ❄
+        </div>
+      ))}
+    </>
+  );
+};
 
 const SecretSantaGame = () => {
   const [participants, setParticipants] = useState<string[]>([]);
@@ -98,7 +130,7 @@ const SecretSantaGame = () => {
       setPhase("reveal");
       setIsShuffling(false);
       toast({
-        title: "¡Sorteo completado!",
+        title: "🎄 ¡Sorteo completado!",
         description: "Cada participante puede descubrir su amigo invisible.",
       });
     }, 1500);
@@ -116,7 +148,7 @@ const SecretSantaGame = () => {
     );
     setRevealingCard(null);
     toast({
-      title: "¡Listo!",
+      title: "🎁 ¡Listo!",
       description: `${giver} ya sabe a quién regala.`,
     });
   };
@@ -142,19 +174,35 @@ const SecretSantaGame = () => {
   const currentRevealAssignment = assignments.find((a) => a.giver === revealingCard);
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-background py-8 px-4 relative overflow-hidden font-poppins">
+      <Snowflakes />
+      
+      {/* Decorative Elements */}
+      <div className="fixed top-10 left-10 text-accent opacity-20 animate-pulse-glow">
+        <TreePine className="w-16 h-16" />
+      </div>
+      <div className="fixed top-20 right-10 text-secondary opacity-30 animate-twinkle">
+        <Star className="w-10 h-10" />
+      </div>
+      <div className="fixed bottom-20 left-20 text-primary opacity-20 animate-pulse-glow">
+        <Gift className="w-12 h-12" />
+      </div>
+      <div className="fixed bottom-10 right-20 text-accent opacity-20 animate-twinkle" style={{ animationDelay: "1s" }}>
+        <Star className="w-8 h-8" />
+      </div>
+
+      <div className="max-w-3xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-6 glow-primary">
-            <Gift className="w-10 h-10 text-primary" />
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 mb-6 glow-primary border-2 border-secondary/30">
+            <Gift className="w-12 h-12 text-secondary" />
           </div>
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-gradient-gold mb-4">
-            Amigo Invisible
+          <h1 className="text-4xl md:text-5xl font-bold text-gradient-christmas mb-4">
+            🎄 Amigo Invisible 🎄
           </h1>
           <p className="text-muted-foreground text-lg">
             {phase === "setup"
-              ? "Añade los participantes y realiza el sorteo"
+              ? "Añade los participantes y realiza el sorteo navideño"
               : "Cada persona pulsa su tarjeta para descubrir a quién regala"}
           </p>
         </div>
@@ -163,9 +211,9 @@ const SecretSantaGame = () => {
         {phase === "setup" && (
           <>
             {/* Add Participant Form */}
-            <div className="card-festive rounded-xl p-6 mb-8">
-              <h2 className="font-display text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5 text-secondary" />
+            <div className="card-christmas rounded-xl p-6 mb-8">
+              <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-accent" />
                 Añadir Participantes
               </h2>
               <div className="flex gap-3">
@@ -175,11 +223,11 @@ const SecretSantaGame = () => {
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && addParticipant()}
-                  className="flex-1 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+                  className="flex-1 bg-muted border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-accent"
                 />
                 <Button
                   onClick={addParticipant}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   Añadir
@@ -189,20 +237,20 @@ const SecretSantaGame = () => {
 
             {/* Participants List */}
             {participants.length > 0 && (
-              <div className="card-festive rounded-xl p-6 mb-8">
-                <h2 className="font-display text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-accent" />
+              <div className="card-christmas rounded-xl p-6 mb-8">
+                <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-secondary" />
                   Participantes ({participants.length})
                 </h2>
                 <div className="grid gap-3">
                   {participants.map((name, index) => (
                     <div
                       key={name}
-                      className="flex items-center justify-between bg-muted/50 rounded-lg p-4 border border-border/30 animate-fade-in"
+                      className="flex items-center justify-between bg-muted/50 rounded-lg p-4 border border-accent/20 animate-fade-in hover:border-accent/40 transition-colors"
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 flex items-center justify-center text-secondary font-bold text-lg border border-secondary/30">
                           {name.charAt(0).toUpperCase()}
                         </div>
                         <span className="text-foreground font-medium text-lg">{name}</span>
@@ -211,7 +259,7 @@ const SecretSantaGame = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => removeParticipant(name)}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        className="text-muted-foreground hover:text-primary hover:bg-primary/10"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -227,10 +275,10 @@ const SecretSantaGame = () => {
                 <Button
                   onClick={performDraw}
                   disabled={isShuffling}
-                  className="bg-gradient-to-r from-primary to-festive-red hover:opacity-90 text-primary-foreground gap-3 text-lg px-10 py-7 glow-primary transition-all duration-300 rounded-xl"
+                  className="bg-gradient-to-r from-primary via-christmas-red to-primary hover:opacity-90 text-primary-foreground gap-3 text-lg px-10 py-7 glow-primary transition-all duration-300 rounded-xl border-2 border-secondary/30"
                 >
                   <Shuffle className={`w-6 h-6 ${isShuffling ? "animate-spin" : ""}`} />
-                  {isShuffling ? "Sorteando..." : "¡Realizar Sorteo!"}
+                  {isShuffling ? "Sorteando..." : "🎅 ¡Realizar Sorteo!"}
                 </Button>
               </div>
             )}
@@ -238,11 +286,11 @@ const SecretSantaGame = () => {
             {/* Empty State */}
             {participants.length === 0 && (
               <div className="text-center py-12">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center animate-float">
-                  <Gift className="w-12 h-12 text-muted-foreground" />
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center animate-float border-2 border-accent/20">
+                  <TreePine className="w-12 h-12 text-accent" />
                 </div>
                 <p className="text-muted-foreground text-lg">
-                  Añade participantes para comenzar el sorteo
+                  Añade participantes para comenzar el sorteo navideño
                 </p>
               </div>
             )}
@@ -274,16 +322,21 @@ const SecretSantaGame = () => {
                   className={`relative group p-6 rounded-xl border-2 transition-all duration-300 animate-fade-in ${
                     assignment.revealed
                       ? "bg-muted/30 border-border/30 cursor-not-allowed opacity-60"
-                      : "card-festive border-secondary/40 hover:border-secondary hover:glow-gold cursor-pointer hover:scale-105"
+                      : "card-christmas border-accent/40 hover:border-secondary hover:glow-gold cursor-pointer hover:scale-105"
                   }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
+                  {!assignment.revealed && (
+                    <div className="absolute -top-2 -right-2 text-secondary animate-twinkle">
+                      <Star className="w-5 h-5 fill-current" />
+                    </div>
+                  )}
                   <div className="flex flex-col items-center gap-4">
                     <div
-                      className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold transition-colors ${
+                      className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold transition-colors border-2 ${
                         assignment.revealed
-                          ? "bg-muted text-muted-foreground"
-                          : "bg-primary/20 text-primary group-hover:bg-primary/30"
+                          ? "bg-muted text-muted-foreground border-border"
+                          : "bg-gradient-to-br from-primary/30 to-accent/30 text-secondary border-secondary/30 group-hover:from-primary/40 group-hover:to-accent/40"
                       }`}
                     >
                       {assignment.revealed ? (
@@ -301,7 +354,7 @@ const SecretSantaGame = () => {
                     </span>
                     <div
                       className={`flex items-center gap-2 text-sm ${
-                        assignment.revealed ? "text-muted-foreground" : "text-secondary"
+                        assignment.revealed ? "text-muted-foreground" : "text-accent"
                       }`}
                     >
                       {assignment.revealed ? (
@@ -323,17 +376,21 @@ const SecretSantaGame = () => {
 
             {/* All Revealed Message */}
             {allRevealed && (
-              <div className="text-center card-festive rounded-xl p-8 glow-gold">
-                <Gift className="w-16 h-16 mx-auto mb-4 text-secondary" />
-                <h2 className="font-display text-2xl font-bold text-gradient-gold mb-4">
-                  ¡Todos saben a quién regalan!
+              <div className="text-center card-christmas rounded-xl p-8 glow-gold border-2 border-secondary/30">
+                <div className="flex justify-center gap-2 mb-4">
+                  <TreePine className="w-10 h-10 text-accent" />
+                  <Gift className="w-10 h-10 text-primary" />
+                  <TreePine className="w-10 h-10 text-accent" />
+                </div>
+                <h2 className="text-2xl font-bold text-gradient-gold mb-4">
+                  🎁 ¡Todos saben a quién regalan! 🎁
                 </h2>
                 <p className="text-muted-foreground mb-6">
-                  El sorteo ha terminado. ¡A buscar los regalos!
+                  El sorteo ha terminado. ¡Feliz Navidad y a buscar los regalos!
                 </p>
                 <Button
                   onClick={resetGame}
-                  className="bg-secondary hover:bg-secondary/90 text-secondary-foreground gap-2"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2"
                 >
                   <Shuffle className="w-4 h-4" />
                   Nuevo Sorteo
@@ -345,20 +402,23 @@ const SecretSantaGame = () => {
 
         {/* REVEAL MODAL */}
         {revealingCard && currentRevealAssignment && (
-          <div className="fixed inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div
-              className="card-festive rounded-2xl p-8 max-w-md w-full text-center glow-gold animate-scale-in"
-            >
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center">
-                <Gift className="w-10 h-10 text-primary" />
+          <div className="fixed inset-0 bg-background/95 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="card-christmas rounded-2xl p-8 max-w-md w-full text-center glow-gold animate-scale-in border-2 border-secondary/50">
+              <div className="flex justify-center gap-2 mb-4">
+                <Star className="w-6 h-6 text-secondary animate-twinkle" />
+                <Star className="w-8 h-8 text-secondary animate-twinkle" style={{ animationDelay: "0.5s" }} />
+                <Star className="w-6 h-6 text-secondary animate-twinkle" style={{ animationDelay: "1s" }} />
               </div>
-              <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center border-2 border-secondary/30">
+                <Gift className="w-10 h-10 text-secondary" />
+              </div>
+              <h2 className="text-2xl font-bold text-foreground mb-2">
                 {currentRevealAssignment.giver}
               </h2>
               <p className="text-muted-foreground mb-6">Tu amigo invisible es...</p>
-              <div className="bg-muted/50 rounded-xl p-6 mb-6 border border-secondary/30">
-                <p className="font-display text-4xl font-bold text-gradient-gold">
-                  {currentRevealAssignment.receiver}
+              <div className="bg-muted/50 rounded-xl p-6 mb-6 border-2 border-secondary/30 glow-gold">
+                <p className="text-4xl font-bold text-gradient-gold">
+                  🎁 {currentRevealAssignment.receiver} 🎁
                 </p>
               </div>
               <p className="text-muted-foreground text-sm mb-6">

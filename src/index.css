@@ -2,78 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
 @layer base {
   :root {
-    --background: 15 25% 6%;
+    --background: 150 40% 6%;
     --foreground: 40 30% 95%;
 
-    --card: 15 20% 10%;
+    --card: 150 35% 10%;
     --card-foreground: 40 30% 95%;
 
-    --popover: 15 20% 10%;
+    --popover: 150 35% 10%;
     --popover-foreground: 40 30% 95%;
 
-    --primary: 4 70% 55%;
+    --primary: 0 72% 50%;
     --primary-foreground: 40 30% 98%;
 
-    --secondary: 40 60% 50%;
-    --secondary-foreground: 15 25% 6%;
+    --secondary: 45 90% 55%;
+    --secondary-foreground: 150 40% 6%;
 
-    --muted: 15 15% 18%;
-    --muted-foreground: 40 15% 60%;
+    --muted: 150 25% 15%;
+    --muted-foreground: 40 15% 65%;
 
-    --accent: 40 70% 60%;
-    --accent-foreground: 15 25% 6%;
+    --accent: 150 60% 35%;
+    --accent-foreground: 40 30% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 15 15% 20%;
-    --input: 15 15% 20%;
-    --ring: 4 70% 55%;
+    --border: 150 20% 20%;
+    --input: 150 20% 20%;
+    --ring: 0 72% 50%;
 
     --radius: 0.75rem;
 
-    --gold: 40 80% 55%;
-    --gold-glow: 40 100% 70%;
-    --festive-red: 4 75% 50%;
-    --festive-green: 150 50% 30%;
+    --gold: 45 90% 55%;
+    --gold-glow: 45 100% 65%;
+    --christmas-red: 0 72% 50%;
+    --christmas-green: 150 60% 30%;
+    --christmas-green-light: 150 50% 40%;
+    --snow: 200 20% 95%;
 
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
-
-    --sidebar-background: 15 20% 8%;
+    --sidebar-background: 150 35% 8%;
     --sidebar-foreground: 40 30% 95%;
-    --sidebar-primary: 4 70% 55%;
+    --sidebar-primary: 0 72% 50%;
     --sidebar-primary-foreground: 40 30% 98%;
-    --sidebar-accent: 15 15% 18%;
+    --sidebar-accent: 150 25% 15%;
     --sidebar-accent-foreground: 40 30% 95%;
-    --sidebar-border: 15 15% 20%;
-    --sidebar-ring: 4 70% 55%;
+    --sidebar-border: 150 20% 20%;
+    --sidebar-ring: 0 72% 50%;
   }
 
   .dark {
-    --background: 15 25% 6%;
+    --background: 150 40% 6%;
     --foreground: 40 30% 95%;
-    --card: 15 20% 10%;
+    --card: 150 35% 10%;
     --card-foreground: 40 30% 95%;
-    --popover: 15 20% 10%;
+    --popover: 150 35% 10%;
     --popover-foreground: 40 30% 95%;
-    --primary: 4 70% 55%;
+    --primary: 0 72% 50%;
     --primary-foreground: 40 30% 98%;
-    --secondary: 40 60% 50%;
-    --secondary-foreground: 15 25% 6%;
-    --muted: 15 15% 18%;
-    --muted-foreground: 40 15% 60%;
-    --accent: 40 70% 60%;
-    --accent-foreground: 15 25% 6%;
+    --secondary: 45 90% 55%;
+    --secondary-foreground: 150 40% 6%;
+    --muted: 150 25% 15%;
+    --muted-foreground: 40 15% 65%;
+    --accent: 150 60% 35%;
+    --accent-foreground: 40 30% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 15 15% 20%;
-    --input: 15 15% 20%;
-    --ring: 4 70% 55%;
+    --border: 150 20% 20%;
+    --input: 150 20% 20%;
+    --ring: 0 72% 50%;
   }
 }
 
@@ -83,31 +80,59 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body;
-    font-family: var(--font-body);
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
+    font-family: 'Poppins', sans-serif;
   }
 }
 
 @layer utilities {
   .text-gradient-gold {
-    @apply bg-gradient-to-r from-secondary via-accent to-secondary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-secondary via-gold-glow to-secondary bg-clip-text text-transparent;
+  }
+
+  .text-gradient-christmas {
+    background: linear-gradient(135deg, hsl(var(--christmas-red)) 0%, hsl(var(--secondary)) 50%, hsl(var(--christmas-green-light)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .glow-gold {
-    box-shadow: 0 0 40px hsl(var(--gold) / 0.3), 0 0 80px hsl(var(--gold) / 0.1);
+    box-shadow: 0 0 40px hsl(var(--gold) / 0.4), 0 0 80px hsl(var(--gold) / 0.2);
   }
 
   .glow-primary {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 30px hsl(var(--accent) / 0.5);
   }
 
   .card-festive {
     @apply bg-card border border-border/50 backdrop-blur-sm;
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(15 20% 8%) 100%);
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(150 30% 8%) 100%);
+  }
+
+  .card-christmas {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(150 35% 12%) 50%, hsl(var(--card)) 100%);
+    border: 1px solid hsl(var(--accent) / 0.3);
+  }
+}
+
+/* Snowfall animation */
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0.3;
   }
 }
 
@@ -126,6 +151,11 @@
   50% { opacity: 1; }
 }
 
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
@@ -138,4 +168,17 @@
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.snowflake {
+  position: fixed;
+  color: hsl(var(--snow));
+  font-size: 1rem;
+  pointer-events: none;
+  animation: snowfall linear infinite;
+  z-index: 1;
 }
