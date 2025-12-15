@@ -499,7 +499,7 @@ const SecretSantaGame = () => {
               <p className="text-muted-foreground mb-6">Tu amigo invisible es...</p>
               <div className="bg-muted/50 rounded-xl p-6 mb-6 border-2 border-secondary/30 glow-gold">
                 <p className="text-4xl font-bold text-gradient-gold">
-                  🎁 {currentRevealAssignment.receiver} 🎁
+                  {currentRevealAssignment.receiver}
                 </p>
               </div>
               <p className="text-muted-foreground text-sm mb-6">
