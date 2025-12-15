@@ -14,8 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        body: ['Inter', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,8 +52,10 @@ export default {
         },
         gold: "hsl(var(--gold))",
         "gold-glow": "hsl(var(--gold-glow))",
-        "festive-red": "hsl(var(--festive-red))",
-        "festive-green": "hsl(var(--festive-green))",
+        "christmas-red": "hsl(var(--christmas-red))",
+        "christmas-green": "hsl(var(--christmas-green))",
+        "christmas-green-light": "hsl(var(--christmas-green-light))",
+        snow: "hsl(var(--snow))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
