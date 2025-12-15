@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Gift, Users, Shuffle, Trash2, Plus, Sparkles, ArrowLeft, Eye, EyeOff, Check, TreePine, Star } from "lucide-react";
+import { Gift, Users, Shuffle, Trash2, Plus, Sparkles, ArrowLeft, Eye, EyeOff, Check, TreePine, Star, Pencil, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -51,6 +51,8 @@ const SecretSantaGame = () => {
   const [phase, setPhase] = useState<GamePhase>("setup");
   const [isShuffling, setIsShuffling] = useState(false);
   const [revealingCard, setRevealingCard] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState<string | null>(null);
+  const [editedValue, setEditedValue] = useState("");
 
   const addParticipant = () => {
     const trimmedName = newName.trim();
@@ -80,6 +82,45 @@ const SecretSantaGame = () => {
 
   const removeParticipant = (name: string) => {
     setParticipants(participants.filter((p) => p !== name));
+  };
+
+  const startEditing = (name: string) => {
+    setEditingName(name);
+    setEditedValue(name);
+  };
+
+  const cancelEditing = () => {
+    setEditingName(null);
+    setEditedValue("");
+  };
+
+  const saveEdit = () => {
+    const trimmedValue = editedValue.trim();
+    if (!trimmedValue) {
+      toast({
+        title: "Nombre vacío",
+        description: "Por favor, introduce un nombre válido.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (trimmedValue !== editingName && participants.includes(trimmedValue)) {
+      toast({
+        title: "Nombre duplicado",
+        description: "Este participante ya está en la lista.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setParticipants(
+      participants.map((p) => (p === editingName ? trimmedValue : p))
+    );
+    setEditingName(null);
+    setEditedValue("");
+    toast({
+      title: "✏️ Nombre actualizado",
+      description: `El nombre ha sido cambiado a ${trimmedValue}.`,
+    });
   };
 
   const shuffleArray = (array: string[]): string[] => {
@@ -249,20 +290,60 @@ const SecretSantaGame = () => {
                       className="flex items-center justify-between bg-muted/50 rounded-lg p-4 border border-accent/20 animate-fade-in hover:border-accent/40 transition-colors"
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 flex items-center justify-center text-secondary font-bold text-lg border border-secondary/30">
-                          {name.charAt(0).toUpperCase()}
+                      {editingName === name ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Input
+                            type="text"
+                            value={editedValue}
+                            onChange={(e) => setEditedValue(e.target.value)}
+                            onKeyPress={(e) => e.key === "Enter" && saveEdit()}
+                            className="flex-1 bg-muted border-accent/30 text-foreground"
+                            autoFocus
+                          />
+                          <Button
+                            size="icon"
+                            onClick={saveEdit}
+                            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={cancelEditing}
+                            className="text-muted-foreground hover:text-foreground"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
                         </div>
-                        <span className="text-foreground font-medium text-lg">{name}</span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeParticipant(name)}
-                        className="text-muted-foreground hover:text-primary hover:bg-primary/10"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 flex items-center justify-center text-secondary font-bold text-lg border border-secondary/30">
+                              {name.charAt(0).toUpperCase()}
+                            </div>
+                            <span className="text-foreground font-medium text-lg">{name}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => startEditing(name)}
+                              className="text-muted-foreground hover:text-secondary hover:bg-secondary/10"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => removeParticipant(name)}
+                              className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
